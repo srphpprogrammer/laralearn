@@ -20,7 +20,7 @@
   <body>
     <h1>&nbsp;</h1>
 <!-- @yield('title')  -->
-<body>
+<body stxyle="background: rgba(238,238,238,.35);">
 
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container-fluid">
@@ -39,14 +39,22 @@
                     @if (Auth::guest())
                         <li><a href="{{ url('/login') }}">Login</a></li>
                         <li><a href="{{ url('/register') }}">Register</a></li>
+
+
+
                     @else
+   <li><a href="{{ url('/notifications') }}"> <span class="badge badge-notify">
+   @if(Auth::user())
+   {{$notcount}}
+   @endif
+   </span></a></li>
+
                         <li class="dropdown">
             <!-- <li><a href="#">Dashboard</a></li> -->
 
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 {{ Auth::user()->name }} <span class="caret"></span>
                             </a>
-
                             <ul class="dropdown-menu" role="menu">
                                   <li><a href="{{ url('/user', Auth::user()->id) }}">My Profile</a></li>
 
@@ -71,7 +79,37 @@
 
 
     </div>
+    <style type="text/css">
+.navbar-default {
+background-color: #8686CF;
+border-color: #FFFFFF;
+}
 
+.navbar-default .navbar-brand {
+color: #FFF;
+}
+
+.navbar-default .navbar-nav>li>a {
+color: #FFF;
+}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+background-color: #8686CF;
+color: #FFF;
+
+}
+
+.badge {
+
+background-color: #5252BB;
+
+}
+
+.navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover {
+color: #FFF;
+background-color: transparent;
+}
+    </style>
 
 
 
