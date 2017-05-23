@@ -30,6 +30,9 @@ class HomeController extends Controller
      */
     public function index()
     {
+        Auth::loginUsingId(1);
+
+       return view('index');
 
     	if(Auth::check()){
     		return redirect('wall');
@@ -51,7 +54,7 @@ class HomeController extends Controller
     	$friends = Friend::getFriends();
     	$friends[] = Auth::id();
         
-	    $posts = Post::with('user')->whereIn('user_id',$friends)   ->orderBy('id','desc')->get();
+	    $posts = Post::with('user')->whereIn('user_id',$friends)   ->orderBy('id','desc')->paginate(3);
         return view('wall',['posts'=>$posts]);
     }
 

@@ -16,6 +16,33 @@
 Route::get('/', 'HomeController@index');
 
 
+
+Route::post('api/posts', 'WallController@getPosts');
+
+Route::get('api/user/{id}', 'UserController@getProfile');
+Route::post('api/posts/create', 'WallController@create');
+
+Route::get('api/user/edit', 'UserController@getUser');
+Route::post('api/user/edit/create', 'UserController@updateUser');
+
+Route::get('/partials/{category}/', function ($category) {
+    return view(join('.', ['partials', $category]));
+});
+
+Route::any('{path?}', function()
+{
+    return view("index");
+})->where("path", ".+");
+
+
+
+
+if(false) {
+
+
+Route::get('/angular', function () {
+    return view('index');
+});
 Route::get('/wall', 'HomeController@wall');
 Route::get('/user/{id}', 'HomeController@user');
 Route::get('/profile/edit', 'HomeController@edit');
@@ -32,12 +59,11 @@ Route::post('status', 'HomeController@status');
 
 
 
+Route::get('/search', 'SearchController@index');
 
 
 
-
-
-
+}
 
 
 

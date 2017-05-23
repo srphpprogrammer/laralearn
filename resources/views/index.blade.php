@@ -1,26 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ config('app.locale') }}" ng-app="myapp">
+
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Larabook</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-    <!-- Bootstrap -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
   </head>
-  <body>
-    <h1>&nbsp;</h1>
-<!-- @yield('title')  -->
-<body stxyle="background: rgba(238,238,238,.35);">
+
+  <body id="app-layout">
+  <base href="/asker/laralearn/public/" />
 
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container-fluid">
@@ -46,7 +38,7 @@
                     @else
    <li><a href="{{ url('/notifications') }}"> <span class="badge badge-notify">
    @if(Auth::user())
-   {{$notcount}}
+    0
    @endif
    </span></a></li>
 
@@ -57,7 +49,7 @@
                                 {{ Auth::user()->name }} <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                  <li><a href="{{ url('/user', Auth::user()->id) }}">My Profile</a></li>
+                                  <li><a href="{{ 'user/'.Auth::user()->id }}">My Profile</a></li>
 
                                      <li><a href="{{ url('/friends') }}">Friends</a></li>
                                 <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
@@ -75,14 +67,15 @@
       </div>
     </nav>
 
-    <div class="container-fluid">
-            @yield('content')
+    <div id="wrap" class="container-fluid">
 
-
+      <div ng-view>
+      </div>
 
 
     </div>
-    <style type="text/css">
+
+<style type="text/css">
 .navbar-default {
 background-color: #8686CF;
 border-color: #FFFFFF;
@@ -114,14 +107,14 @@ background-color: transparent;
 }
     </style>
 
-
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-        <!-- JavaScripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
-</body>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular-route.js"></script>
+
+    <script src="{{ asset('js/app.js') }}"></script> 
+
   </body>
+
 </html>

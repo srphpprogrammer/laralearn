@@ -1,10 +1,5 @@
-@extends('master')
 
-@section('content')
-
-
-
-<div class="container">
+<div class="container" ng-controller="WallController">
 <div class="col-md-8">
 
     <div class="row">
@@ -18,12 +13,11 @@
 
                                    <form class="form-horizontal" role="form" method="post" action="{{url('status')}}">
                                     <h4>What's New</h4>
-    {{ csrf_field() }}
 
                                      <div class="form-group" style="padding:14px;">
-  <textarea class="form-control" placeholder="Update your status" required name="status"></textarea>
+  <textarea class="form-control" ng-model="content" placeholder="Update your status" required name="status"></textarea>
                                     </div>
-                                    <button class="btn btn-primary pull-right" type="submit">Post</button>
+                                    <button ng-click="makePost()" class="btn btn-primary pull-right" type="button">Post</button>
 
                                     <ul class="list-inline">&nbsp;</ul>
                                   </form>
@@ -34,15 +28,14 @@
 
     <div class="row">
 
-      @foreach ($posts as $p)
 
-<div class="panel panel-default">
+<div class="panel panel-default" ng-repeat="p in posts">
                                  <div class="panel-heading"><a href="#" class="pull-right">
 
-                                 {{$p->created_at->diffForHumans()}}</a> <h4> {{ $p->user->name }}</h4></div>
+                                 {{p.created_at  }}</a> <h4> {{ p.user.name }}</h4></div>
                                   <div class="panel-body">
 
-                                  {{ $p->content }}
+                                  {{ p.content }}
 
                                   <!-- 
                                     <img src="//placehold.it/150x150" class="img-circle pull-right"> <a href="#">Keyword: Bootstrap</a>
@@ -64,15 +57,32 @@
                                   </div>
                                </div>
 
-@endforeach
-
-                              </div>
-        {{ $posts->links() }}
-
 
 
                               </div>
+        <!-- {{ $posts->links() }} -->
 
+<ul class="pager">
+  <li><a href="javascript::void(0)" ng-click="loadmore()">Load More Posts</a></li>
+</ul>
+
+        <!--                         </div>
+<div class="col-sm-2 "  >
+<br>
+<br>
+<br>
+<br>
+            <nav class="nav-sidebar">
+                <ul class="nav">
+                    <li class="active"><a style="background-color: #eee;" href="javascript:;">Posts</a></li>
+                  <li><a href="javascript:;">About</a></li>
+          <li><a href="javascript:;">Products</a></li>
+          <li><a href="javascript:;">FAQ</a></li>
+          <li class="nav-divider"></li>
+          <li><a href="javascript:;"><i class="glyphicon glyphicon-off"></i> Sign in</a></li>
+                           </ul>
+            </nav>
+        </div>-->
                       
 
                               </div>

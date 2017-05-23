@@ -12,6 +12,15 @@ class Post extends Model
 		return $this->belongsTo('App\User');
 	}
 
-
+    /**
+     * Humanize Timestamp
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getCreatedAtAttribute($value)
+    {
+        return \Carbon\Carbon::parse($value)->diffForHumans();
+    }
 
 }
