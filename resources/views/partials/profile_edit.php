@@ -1,15 +1,15 @@
 <div class="container" ng-controller="UserController">
- <!--  <div class="row">
+<div class="row">
 
     <form action="" method="post">
 
       <div class="form-group">
         <label>Name</label>
-        <input type="text" name="name" class="form-control" required value="">
+        <input type="text" name="name" class="form-control" required value="{{user.name}}">
       </div>
       <div class="form-group">
         <label>Bragging rights (Comma Separated)</label>
-        <input type="text" name="brights" class="form-control" required value="">
+        <input type="text" name="brights" class="form-control" required value="{{user.brights}}">
       </div>
 
 
@@ -20,5 +20,5 @@
       <div class="clearfix"></div>
     </form>
 
-  </div> -->
+  </div>
 </div>

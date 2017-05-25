@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use Validator;
+use Illuminate\Http\Request;
+use Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -69,4 +71,26 @@ class AuthController extends Controller
             'password' => bcrypt($data['password']),
         ]);
     }
+
+    /**
+     * Handle a login request to the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function login(Request $request)
+    {
+      $this->validate($request,[
+            'email' => 'required|email',
+            'password' => 'required'
+          ]);    
+        if(Auth::attempt(['email'=>$request['email'],'password'=>$request['password']])){
+            return response("ok",200);    
+        }
+        return response("error",401);                  
+
+    }
+
+
+
 }

@@ -9,7 +9,7 @@
 
 	<div ng-if="friend == null">
 	<br>
-	<a href="profile/edit" class="btn btn-primary btn-small">Edit Profile</a>
+	<a href="user/edit" class="btn btn-primary btn-small">Edit Profile</a>
 	<br>
 	<br>
 	</div>

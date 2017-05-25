@@ -9,12 +9,14 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
+        <link rel="stylesheet" href="{{asset('style.css')}}">
+
   </head>
 
-  <body id="app-layout">
+  <body id="app-layout" class="{{Auth::guest()? 'unauthbg' :'' }}">
   <base href="/asker/laralearn/public/" />
 
-    <nav class="navbar navbar-default navbar-fixed-top">
+    <nav class="navbar navbar-default xnavbar-fixed-top" ng-controller="NavController">
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -24,45 +26,39 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="{{ url('') }}"><span class="glyphicon glyphicon-fire"></span>
- &nbsp; Larabook</a>
+ &nbsp; Larabook - @{{isLoggedIn}} X</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-<!-- Authentication Links -->
-                    @if (Auth::guest())
-                        <li><a href="{{ url('/login') }}">Login</a></li>
-                        <li><a href="{{ url('/register') }}">Register</a></li>
 
+                        <li ng-if="isLoggedIn != true" ><a href="{{ url('/login') }}">Login</a></li>
+                        <li ng-if="isLoggedIn != true" ><a href="register/">Register</a></li>
+    
+         
+   <li ng-if="isLoggedIn"><a href="{{ url('/notifications') }}"> <span class="badge badge-notify">0</a></li>
+<!--  <li><a href="javascript::void(0)" ng-click="logout()"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
+-->
 
+                        <li class="dropdown" ng-if="isLoggedIn == true">
 
-                    @else
-   <li><a href="{{ url('/notifications') }}"> <span class="badge badge-notify">
-   @if(Auth::user())
-    0
-   @endif
-   </span></a></li>
-
-                        <li class="dropdown">
-            <!-- <li><a href="#">Dashboard</a></li> -->
-
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {{ Auth::user()->name }} <span class="caret"></span>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> 
+                              X Asker <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                  <li><a href="{{ 'user/'.Auth::user()->id }}">My Profile</a></li>
+                                  <li><a href="{{ 'profile/' }}">My Profile</a></li>
 
                                      <li><a href="{{ url('/friends') }}">Friends</a></li>
-                                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
+                                <li><a href="javascript::void(0)" ng-click="logout()"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
                          
                             </ul>
                         </li>
-                    @endif
+                
           </ul>
-             @if(Auth::user())
-          <form class="navbar-form navbar-right" action="{{url('search')}}">
-            <input type="text" class="form-control" placeholder="Search..." name="q">
+          <form class="navbar-form navbar-right" ng-submit="search()" ng-show="isLoggedIn">
+            <input required type="text" class="form-control" placeholder="Search..." ng-model="qstring">
+            <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
+
           </form>
-             @endif
         </div>
       </div>
     </nav>
@@ -110,8 +106,14 @@ background-color: transparent;
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
+
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular-route.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.6/ngStorage.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.js"></script>
 
     <script src="{{ asset('js/app.js') }}"></script> 
 

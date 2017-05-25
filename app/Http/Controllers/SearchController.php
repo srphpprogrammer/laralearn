@@ -16,15 +16,23 @@ class SearchController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request,$q)
     {   
 
         $friends = Friend::getFriends();
         $friends[] = Auth::id();
-        $users = User::whereNotIn('id',$friends)->where('name', 'like', '%' . $request->input('q') . '%')->orderBy('id','desc')
-->paginate(8);
-        # dd($users);
-       return view('search',['users'=>$users]);
+       /* $limit      = $request->input('limit');
+        $offset     = $request->input('offset');*/
+     $limit      = 8;
+        $offset     = 0;
+     
+        $users = User::whereNotIn('id',$friends)->where('name', 'like', '%' . $q . '%')->limit($limit)->offset($offset)->orderBy('id','desc')
+->get();
+
+ 
+
+
+       return $users;
     }
 
     /**

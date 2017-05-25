@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Friend;
 use App\User;
 use Auth;
+use Validator;
 
 class UserController extends Controller
 {
@@ -26,9 +27,32 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+
+        $data = (array) $request->all();
+
+        $validator = Validator::make($data, [
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|min:6',
+        ]);
+
+
+        if ($validator->fails()) {
+           return response($validator->errors(),401);
+        }
+
+        $user = User::create([
+            'name' => $request->input('name'),
+            'email' =>  $request->input('email'),
+            'password' => bcrypt( $request->input('password')),
+        ]);
+
+        if($user){
+            Auth::loginUsingId($user->id);
+        }
+
     }
 
     /**
@@ -67,7 +91,7 @@ class UserController extends Controller
     }
 
     function getUser(){
-        return Auth::user();
+       return auth()->user();
     }
 
     /**
@@ -101,6 +125,62 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+    
     }
+
+    /**
+     * Logout 
+     *
+     * @param  int  $id
+     * @return null
+     */
+    public function logout()
+    {
+        return Auth::logout();
+    }
+
+    /**
+     * Validate Email 
+     *
+     * @param  Request $request
+     * @return null
+     */
+    public function validateEmail(Request $request)
+    {   
+
+        $user = User::where("email",$request->input('email'))->count();
+        return $user > 0 ? response('Email is already in Use', 401) : "ok";
+    }
+
+
+    /**
+     * API login
+     * @param  Request $request 
+     * @return json
+     */
+    /*public function login(Request $request){
+        
+        $data = (array) $request->all();
+
+        $validator = Validator::make($data, [
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|min:6',
+        ]);
+
+
+        if ($validator->fails()) {
+           return response($validator->errors(),401);
+        }
+
+
+        $this->validate($request, [
+            $this->loginUsername() => 'required', 'password' => 'required',
+        ]);  
+
+
+
+    }*/
+
+
 }
