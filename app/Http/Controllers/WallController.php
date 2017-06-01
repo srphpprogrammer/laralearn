@@ -44,6 +44,16 @@ class WallController extends Controller
         $post->save();
 
         $post = Post::with('user')->find($post->id);
+        $pusher = \Illuminate\Support\Facades\App::make('pusher');
+        $channels = [];
+        $friends    = Friend::getFriends();
+        foreach ($friends as $f) {
+           $channels[] = 'private-larawall'.$f;
+        }
+        if(!empty($channels)){
+            $pusher->trigger($channels,'newpost',$post);
+        }
+
 
         return $post;
     }

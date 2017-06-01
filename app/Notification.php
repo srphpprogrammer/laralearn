@@ -12,4 +12,15 @@ class Notification extends Model
 		return $this->belongsTo('App\User','item_id','id');
 	}
 
+    /**
+     * Humanize Timestamp
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getCreatedAtAttribute($value)
+    {
+        return \Carbon\Carbon::parse($value)->diffForHumans();
+    }
+
 }

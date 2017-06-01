@@ -9,6 +9,9 @@ use App\Friend;
 use App\User;
 use Auth;
 use Validator;
+use App\Notification;
+use Illuminate\Support\Facades\Log;
+use Abraham\TwitterOAuth\TwitterOAuth;
 
 class UserController extends Controller
 {
@@ -84,8 +87,8 @@ class UserController extends Controller
                           ->where('f1', '=', $id);
                 })->get()->first();
 
-       $user = User::findorFail($id);
-       $rights = explode(',', $user->brights);
+       $user    = User::findorFail($id);
+       $rights  = explode(',', $user->brights);
 
        return ['user'=>$user,'friend'=> $friend,'rights'=>$rights];
     }
@@ -181,6 +184,107 @@ class UserController extends Controller
 
 
     }*/
+ /**
+  * 
+     * Logout 
+     *
+     * @param  int  $id
+     * @return null
+     */
+    public function getUserDetails()
+    {   
+       return ['user'=>auth()->user(),'notcount'=>Notification::where('user_id',Auth::id())->count()];
+    }
+
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateProfile(Request $request)
+    {
+
+        $data = (array) $request->all();
+
+        $validator = Validator::make($data, [
+            'brights' => 'required',
+            'name' => 'required',
+        ]);
+
+
+        if ($validator->fails()) {
+           return response($validator->errors(),401);
+        }
+
+        User::where('id',Auth::id())->update([
+            'brights' => $request->input('brights'),
+            'name' =>  $request->input('name'),
+        ]);
+
+     
+
+    }
+
+
+ /**
+  * 
+     * Logout 
+     *
+     * @param  int  $id
+     * @return null
+     */
+    public function authcheck(Request $request)
+    {   
+       # Log::info($request->all());
+        
+        if(auth()->user()){
+            $pusher = \Illuminate\Support\Facades\App::make('pusher');
+            $data =  $pusher->socket_auth($_POST['channel_name'], $_POST['socket_id']);
+            #Log::info($data);
+            return  $data;
+        }
+
+        header('', true, 403);
+        echo "Forbidden";
+    }
+
+    function twitterAuth(){
+        $connection = new TwitterOAuth(env('TWITTER_CONSUMER_KEY'),env('TWITTER_CONSUMER_SECRET'));
+        // request token of application
+        $request_token = $connection->oauth(
+            'oauth/request_token', [
+                'oauth_callback' => env('TWITTER_CALLBACK')
+            ]
+        );
+
+// throw exception if something gone wrong
+if($connection->getLastHttpCode() != 200) {
+    throw new \Exception('There was a problem performing this request');
+}
+ 
+
+// save token of application to session
+$_SESSION['oauth_token'] = $request_token['oauth_token'];
+$_SESSION['oauth_token_secret'] = $request_token['oauth_token_secret'];
+ 
+// generate the URL to make request to authorize our application
+$url = $connection->url(
+    'oauth/authorize', [
+        'oauth_token' => $request_token['oauth_token']
+    ]
+);
+
+return redirect($url);
+
+    }
+
+    function twitterCallback(){
+        echo 1; 
+        dd($_REQUEST);
+    }
+
+
 
 
 }

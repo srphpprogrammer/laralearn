@@ -52,6 +52,14 @@
                             </div>
                         </div>
                     </form>
+        <div class="col-md-8 col-md-offset-4">
+
+<a class="btn btn-small btn-social btn-twitter" href="auth/login/twitter" target="_self">
+            <span class="fa fa-twitter">T</span> Login in with Twitter
+          </a>
+
+                </div>
+
                 </div>
             </div>
         </div>

@@ -172,8 +172,7 @@ class HomeController extends Controller
 
     function notifications(){
         $notifications = Notification::with('users')->where('user_id',Auth::id())->orderBy('id','desc')->get();
-       return view('notifications',['notifications'=>$notifications]);
-
+       return $notifications;
     }   
 
 
@@ -188,7 +187,7 @@ class HomeController extends Controller
             $query->where('f2', '=', Auth::id())
                   ->where('f1', '=', $friendId);
         })->where('is_confirmed',0)->get()->first();
-        #   dd($friend);
+
         if(empty($friend)) return redirect('/');
         $friend = User::find(Notification::find($id)->item_id);
         return view('accept',['friend'=>$friend]);

@@ -1,5 +1,5 @@
 
-<div class="container" ng-controller="searchController">
+<div class="container" ng-controller="FriendController">
 <div class="col-md-12">
 
 

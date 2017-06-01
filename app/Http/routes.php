@@ -25,10 +25,16 @@ Route::post('api/posts/create', 'WallController@create');
 
 Route::get('api/validateemail/', 'UserController@validateEmail');
 
-Route::get('api/user/edit', 'UserController@getUser');
 Route::post('api/user/edit/create', 'UserController@updateUser');
+Route::get('api/user/edit', 'UserController@getUser');
+Route::post('api/user/edit', 'UserController@updateProfile');
+
 
 Route::post('api/search/{id}', 'SearchController@index');
+
+Route::post('api/friend/request', 'FriendController@requestAction');
+Route::post('api/friends', 'FriendController@friends');
+
 
 
 Route::get('api/user/logout', 'UserController@logout');
@@ -36,6 +42,42 @@ Route::get('api/user/logout', 'UserController@logout');
 
 Route::post('api/user/create', 'UserController@create');
 Route::post('api/user/login', 'Auth\AuthController@login');
+Route::get('api/user/auth', 'UserController@getUserDetails');
+Route::post('api/notifications', 'HomeController@notifications');
+Route::get('api/notification/{id}', 'NotificationActionController@getNotification');
+Route::post('api/notification/{id}', 'NotificationActionController@updateNotification');
+
+Route::post('api/authcheck', 'UserController@authcheck');
+Route::get('auth/login/twitter', 'UserController@twitterAuth');
+Route::get('auth/twittercallback', 'UserController@twitterCallback');
+
+Route::get('terms', function() {
+
+  echo "Twitter Terms here";
+
+});
+Route::get('/bridge', function() {
+
+
+	
+    $pusher = Illuminate\Support\Facades\App::make('pusher');
+
+    $pusher->trigger( 'private-lara',
+                      'test-event', 
+                      array('text' => 'Preparing the Pusher Laracon.eu workshop!'));
+
+return 1;
+});
+
+Route::get('/bridge', function() {
+    $pusher = Illuminate\Support\Facades\App::make('pusher');
+
+    $pusher->trigger( 'private-lara',
+                      'test-event', 
+                      array('text' => 'Preparing the Pusher Laracon.eu workshop!'));
+
+return 1;
+});
 
 
 
@@ -47,7 +89,6 @@ Route::any('{path?}', function()
 {
     return view("index");
 })->where("path", ".+");
-
 
 
 

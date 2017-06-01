@@ -85,7 +85,7 @@ class AuthController extends Controller
             'password' => 'required'
           ]);    
         if(Auth::attempt(['email'=>$request['email'],'password'=>$request['password']])){
-            return response("ok",200);    
+            return response(auth()->user(),200);    
         }
         return response("error",401);                  
 
