@@ -4,7 +4,7 @@
     <br><br>
         <br><br>
     <center>
-    <img src="images/default_avatar.png" name="aboutme" width="140" height="140" border="0" class="img-circle">
+    <img src="http://laralearn.dev/uploads/images/{{user.profile_image}}" name="aboutme" width="140" height="140" border="0" class="img-circle">
 
     <h3 class="media-heading">{{ user.name | capitalize}}</h3>
 	<div ng-if="friend == null && auth.user.id == user.id">
@@ -49,3 +49,4 @@
                     <hr>
                 </div>
                               </div>
+

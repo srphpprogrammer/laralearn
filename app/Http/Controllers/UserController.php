@@ -12,6 +12,9 @@ use Validator;
 use App\Notification;
 use Illuminate\Support\Facades\Log;
 use Abraham\TwitterOAuth\TwitterOAuth;
+use Image;
+use Illuminate\Support\Facades\Input;
+
 
 class UserController extends Controller
 {
@@ -249,7 +252,7 @@ class UserController extends Controller
         echo "Forbidden";
     }
 
-    function twitterAuth(){
+    function twitterAuth(Request $request){
         $connection = new TwitterOAuth(env('TWITTER_CONSUMER_KEY'),env('TWITTER_CONSUMER_SECRET'));
         // request token of application
         $request_token = $connection->oauth(
@@ -258,31 +261,152 @@ class UserController extends Controller
             ]
         );
 
-// throw exception if something gone wrong
-if($connection->getLastHttpCode() != 200) {
-    throw new \Exception('There was a problem performing this request');
-}
- 
+        // throw exception if something gone wrong
+        if($connection->getLastHttpCode() != 200) {
+            throw new \Exception('There was a problem performing this request');
+        }
+         
 
-// save token of application to session
-$_SESSION['oauth_token'] = $request_token['oauth_token'];
-$_SESSION['oauth_token_secret'] = $request_token['oauth_token_secret'];
- 
-// generate the URL to make request to authorize our application
-$url = $connection->url(
-    'oauth/authorize', [
-        'oauth_token' => $request_token['oauth_token']
-    ]
-);
+        // save token of application to session
+         $request->session()->put('oauth_token', $request_token['oauth_token']);
+         $request->session()->put('oauth_token_secret', $request_token['oauth_token_secret']);
+         
+        // generate the URL to make request to authorize our application
+        $url = $connection->url(
+            'oauth/authorize', [
+                'oauth_token' => $request_token['oauth_token']
+            ]
+        );
 
-return redirect($url);
+        return redirect($url);
 
     }
 
-    function twitterCallback(){
-        echo 1; 
-        dd($_REQUEST);
+    function twitterCallback(Request $request){
+
+        #dd($_REQUEST);
+        $oauth_verifier = $request->input('oauth_verifier');
+
+        if (empty($oauth_verifier) ||
+            empty(session('oauth_token')) ||
+            empty(session('oauth_token_secret')))
+         {
+            dd("something's wrong");
+        }
+
+
+       $connection = new TwitterOAuth(
+            env('TWITTER_CONSUMER_KEY'),
+            env('TWITTER_CONSUMER_SECRET'),
+            session('oauth_token'),
+            session('oauth_token_secret')
+        );
+  
+        // request user token
+        $token = $connection->oauth(
+            'oauth/access_token', [
+                'oauth_verifier' => $oauth_verifier
+            ]
+        );
+
+        $twitter = new TwitterOAuth(
+            env('TWITTER_CONSUMER_KEY'),
+            env('TWITTER_CONSUMER_SECRET'),
+            $token['oauth_token'],
+            $token['oauth_token_secret']
+        );
+
+        $user_info = $twitter->get('account/verify_credentials', array('include_email' => 'true'));
+
+        $user = User::where('email',$user_info->email)->count();
+        #print_r($user);
+        #dd($user_info);
+                    Log::info([
+                'name' => $user_info->name,
+                'email' =>  $user_info->email,
+                'password' => bcrypt(str_random(8)),
+                'oauth_provider' => 'twitter',
+                'oauth_uid'=> $user_info->id,
+                'oauth_secret' => $token['oauth_token_secret'],
+                'oauth_token' => $token['oauth_token'],
+                'oauth_username' => $user_info->screen_name
+            ]);
+                  #  exit;
+        if($user < 1){
+
+            $user = User::create([
+                'name' => $user_info->name,
+                'email' =>  $user_info->email,
+                'password' => bcrypt(str_random(8)),
+                'oauth_provider' => 'twitter',
+                'oauth_uid'=> $user_info->id,
+                'oauth_secret' => $token['oauth_token_secret'],
+                'oauth_token' => $token['oauth_token'],
+                'oauth_username' => $user_info->screen_name
+            ]);
+             # Log::info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+    }else{
+            #$user = User::where('email',)->get()->first();
+            #dd($user);
+            $user = User::where('email',$user_info->email)->update([
+                'oauth_provider' => 'twitter',
+                'oauth_uid'=> $user_info->id,
+                'oauth_secret' => $token['oauth_token_secret'],
+                'oauth_token' => $token['oauth_token'],
+                'oauth_username' => $user_info->screen_name
+            ]);
+          #Log::info("++++++++++----------------------------------------++++++");
+          #Log::info($user);
+          #Log::info("++++++++++----------------------------------------++++++");
+
+
+        }
+      #  dd($user);
+        Auth::loginUsingId(User::where('email',$user_info->email)->get()->first()->id);
+        return redirect('/auth/triggerlogin');
+      /*  if($user){
+        }
+
+
+        print_r($user_info);
+        $user = User::where("oauth_provider",'twitter')
+                    ->where('oauth_uid',$user_info->id)->count();
+
+
+*/
+
+
+
+
+  
     }
+
+
+
+    public function uploadImage(){
+        $file = Input::file('file');
+        if ($file!=null) {
+
+            $ext = $file->getClientOriginalExtension();
+            $image_name = str_random(15).'.'.$ext;
+        }
+
+        if (!file_exists(public_path().'/uploads/images')) {
+            mkdir(public_path().'/uploads/images');
+        }
+        
+        Image::make(Input::file('file'))->save(public_path().'/uploads/images/'.$image_name);
+
+        #$user = User::where('profile_image',$image_name)->update([
+
+        User::where('id',Auth::id())->update([
+            'profile_image' => $image_name,
+        ]);
+
+        return ['image'=> $image_name];
+    }
+
 
 
 

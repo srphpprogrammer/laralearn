@@ -160,8 +160,13 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-       # Barryvdh\Debugbar\ServiceProvider::class,
+       Barryvdh\Debugbar\ServiceProvider::class,
         Vinkla\Pusher\PusherServiceProvider::class,
+        Cornford\Googlmapper\MapperServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
+        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+        Barryvdh\Cors\ServiceProvider::class,
+
     ],
 
     /*
@@ -207,7 +212,11 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-       # 'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        'Mapper'         => Cornford\Googlmapper\Facades\MapperFacade::class,
+        'Image' => Intervention\Image\Facades\Image::class,
+'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+
     ],
 
 ];

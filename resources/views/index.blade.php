@@ -17,7 +17,7 @@
 
 <!-- 
   class="{{Auth::guest()? 'unauthbg' :'' }}" -->
- <!--  <base href="/asker/laralearn/public/" />   -->
+  <base href="/" />  
 
     <nav class="navbar navbar-default xnavbar-fixed-top" ng-controller="NavController">
       <div class="container-fluid">
@@ -55,6 +55,8 @@
                             <ul class="dropdown-menu" role="menu">
                                   <li><a href="profile/@{{auth.user.id}}">My Profile</a></li>
 
+<!--  <li><a href="messaging"><i class="fa fa-btn fa-sign-out"></i>Messaging</a></li>
+ -->
                                      <li><a href="{{ url('/friends') }}">Friends</a></li>
                                 <li><a href="javascript::void(0)" ng-click="logout()"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
                          
@@ -125,25 +127,13 @@ background-color: transparent;
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular-route.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.6/ngStorage.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.6/ngStorage.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.js"></script>
-  <script src="https://js.pusher.com/4.0/pusher.min.js"></script>
+    <script src="https://js.pusher.com/4.0/pusher.min.js"></script>
 
     <script src="{{ asset('js/app.js') }}"></script> 
 
-
-
-
-<script type="text/javascript">
-
-
- /* 
-      // Enable pusher logging - don't include this in production
- 
-
-*/
-</script>
   </body>
 
 </html>

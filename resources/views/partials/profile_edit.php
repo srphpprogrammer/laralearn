@@ -3,6 +3,8 @@
 
     <form action="" method="post" >
 
+    <img src="http://laralearn.dev/uploads/images/{{user.profile_image}}" name="aboutme" width="140" height="140" border="0" class="img-circle">
+
       <div class="form-group">
         <label>Name</label>
         <input type="text" name="name" class="form-control" required ng-model="user.name">
@@ -20,5 +22,10 @@
       <div class="clearfix"></div>
     </form>
 
+
+  <input type="file" name="file" onchange="angular.element(this).scope().uploadImage(this.files)">
+  
+
   </div>
 </div>
+

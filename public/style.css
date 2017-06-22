@@ -152,3 +152,68 @@
 	background: url("http://localhost/asker/laralearn/public/images/bg.jpg");
 	background-size: cover;
 }
+
+#MessageBox .chat
+{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#MessageBox .chat li
+{
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #B3A9A9;
+}
+
+#MessageBox .chat li.left .chat-body
+{
+    margin-left: 60px;
+}
+
+#MessageBox .chat li.right .chat-body
+{
+    margin-right: 60px;
+}
+
+
+#MessageBox .chat li .chat-body p
+{
+    margin: 0;
+    color: #777777;
+}
+
+#MessageBox .panel .slidedown .glyphicon, .chat .glyphicon
+{
+    margin-right: 5px;
+}
+
+#MessageBox .panel-body
+{
+    overflow-y: scroll;
+    height: 500px;
+}
+
+#MessageBox::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+}
+
+#MessageBox::-webkit-scrollbar
+{
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+#MessageBox::-webkit-scrollbar-thumb
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #555;
+}
+
+#MessageBox .panel-primary>.panel-heading {
+color: #fff;
+background-color: #8686CF;
+}

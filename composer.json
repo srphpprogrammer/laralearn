@@ -9,7 +9,11 @@
         "laravel/framework": "5.2.*",
         "barryvdh/laravel-debugbar": "^2.3",
         "vinkla/pusher": "^2.4",
-        "abraham/twitteroauth": "^0.7.3"
+        "abraham/twitteroauth": "^0.7.3",
+        "cornford/googlmapper": "^2.25",
+        "intervention/image": "^2.3",
+        "tymon/jwt-auth": "0.5.*",
+        "barryvdh/laravel-cors": "^0.9.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

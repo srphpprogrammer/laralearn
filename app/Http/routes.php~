@@ -49,45 +49,20 @@ Route::get('/getauthinfo', function() {
 }); 
 */
 
-//
-use Illuminate\Support\Facades\Log;
-Route::group(['middleware' => \Barryvdh\Cors\HandleCors::class], function(){
 
-    Route::post('/api/profile', 'Auth\AuthController@jwtverify');
+Route::get('/api/register', function() {
 
-/*Route::post('/api/profile',function(){
-    Log::info('called profile update');
-
-    return response(["status"=>"success"]);
-
-
-});*/
-
-    Route::post('/api/auth/register', 'Auth\AuthController@jwtregister');
-    Route::get('/api/auth/verify', 'Auth\AuthController@jwtverify');
-    Route::post('/api/auth/login', 'Auth\AuthController@jwtprotected');
-
-
-    Route::post('/api/auth/xregister', function() {
-
-        //token after register success 
-        return ["user" => "Antony","token"=>"randomstring"];
-
-        //username already exists
-        return response(["status"=>"error"],500)
-        ->header('Content-Type', 'application/json');
-        
-
-
-        return response([],400);
-    }); 
-
-
-}); 
     
-Route::group(['middleware' => 'cors'], function(){
+    return [
+        "status" => "success"
+    ];
+
+
+
+    return response([],400);
 
 }); 
+
 /**
 
 
@@ -210,4 +185,3 @@ Route::get('/search', 'SearchController@index');
 
 }
 
-*/

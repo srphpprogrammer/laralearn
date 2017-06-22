@@ -1,7 +1,6 @@
 (function() {
   'use strict';
 
-
   var app = angular.module('myapp', ['ngRoute','ngStorage']);
 
   app.config(['$routeProvider', '$locationProvider', '$httpProvider', function($routeProvider, $locationProvider, $httpProvider) {
@@ -31,7 +30,7 @@
       templateUrl: 'partials/register',
       controller: 'RegisterController',
       controllerAs: 'rc'
-    }).when('/notification/:id', {
+    }).when('/notification/:id/', {
       templateUrl: 'partials/notaction',
       controller: 'NotificationActionController',
       controllerAs: 'nac'
@@ -47,13 +46,23 @@
       templateUrl: 'partials/friends',
       controller: 'FriendController',
       controllerAs: 'fc'
+    }).when('/messages/:id/', {
+      templateUrl: 'partials/messaging',
+      controller: 'MessagesController',
+      controllerAs: 'fc'
+    }).when('/auth/triggerlogin', {
+      resolve: {
+        loginService: ['$route', 'AuthFactory', function($route, AuthFactory) {
+          return AuthFactory.triggerLogin();
+        }]
+      }
     }).otherwise({
       redirectTo:'/'
     });
 
     $locationProvider.html5Mode({
       enabled: true,
-      requireBase: false
+      requireBase: true
     });
 
 
@@ -61,7 +70,7 @@
 
 
   app.controller('HomeController', function($scope,$http,$route,$localStorage,$location,$rootScope) {
-     // if ($rootScope.isLoggedIn) $location.path('/wall');
+      if($rootScope.isLoggedIn) $location.path('/wall');
   });
 
 
@@ -199,11 +208,11 @@
       }, function errorCallback(response) {});
     }
 
-    Pusher.logToConsole = true;
+    Pusher.logToConsole = false;
 
     var pusher = new Pusher('aa6903fb73621b6ca6d5', {
       encrypted: false,
-      authEndpoint: '/asker/laralearn/public/api/authcheck'
+      authEndpoint: 'api/authcheck'
     });
 
     var channel = pusher.subscribe('private-larawall'+$rootScope.auth.user.id);
@@ -255,7 +264,23 @@
 
       }, function errorCallback(response) {});
     }
-    
+
+  $scope.uploadImage = function(files) {
+    var formData = new FormData();
+    formData.append("file", files[0]);
+    $scope.showLoader = true;
+    $http.post('api/user/image', formData, {
+      headers: {
+        'Content-Type': undefined
+      },
+      transformRequest: angular.identity
+    }).then(function successCallback(response) {
+      $scope.user.profile_image = response.data.image;
+    }, function errorCallback(response) {});
+  }
+
+
+
   });
 
   app.controller('ProfileController', function($scope, $http, $route,$location) {
@@ -310,23 +335,47 @@
    
   });
 
+  app.controller('MessagesController', function($route,$scope, $http,$localStorage,$location) {
+   
+
+      $http.get('api/messages/'+$route.current.params.id, {}).then(function successCallback(response) {
+        $scope.messages = response.data.messages;
+      }, function errorCallback(response) {
+        
+      });
+
+    $scope.sendMessage = function() {
+
+      $http.post('api/messages/create', {
+        message: $scope.message,
+        id: $route.current.params.id,
+      }).then(function successCallback(response) {
+      }, function errorCallback(response) {
+        console.log(response);
+      });
+
+    }
+
+   
+  });
+
+
+
+
   app.controller('NotificationActionController', function($scope, $http,$localStorage,$location,$route) {
 
     $http.get('api/notification/' + $route.current.params.id, {}).then(function successCallback(response) {
       $scope.user = response.data.user;
     }, function errorCallback(response) {
         $location.path('/wall');
-     
     });
 
     if (!$localStorage.isLoggedIn) {$location.path('/register');}
     
     $scope.acceptRequest = function(action){
-
       $http.post('api/notification/' + $route.current.params.id, {
         action : action,
       }).then(function successCallback(response) {
-        alert("Success!");
         $location.path('/wall');
       });
 
@@ -343,7 +392,17 @@
       authenticate: function(param) {
         return $http.get('api/user/auth');
       },
-
+      triggerLogin: function(param) {
+        return $http.get('api/user/auth').then(function successCallback(response) {
+          $rootScope.isLoggedIn = true;
+          $localStorage.isLoggedIn = true;
+          $rootScope.auth = response.data;
+          $location.path('/wall');
+        }, function errorCallback(response) {
+           $localStorage.$reset();
+            $location.path('/');return;
+        });
+      },
     }
 
   });
