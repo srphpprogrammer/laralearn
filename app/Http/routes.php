@@ -53,7 +53,7 @@ Route::get('/getauthinfo', function() {
 use Illuminate\Support\Facades\Log;
 Route::group(['middleware' => \Barryvdh\Cors\HandleCors::class], function(){
 
-    Route::post('/api/profile', 'Auth\AuthController@jwtverify');
+    //Route::post('/api/profile', 'Auth\AuthController@jwtverify');
 
 /*Route::post('/api/profile',function(){
     Log::info('called profile update');
@@ -82,10 +82,13 @@ Route::group(['middleware' => \Barryvdh\Cors\HandleCors::class], function(){
         return response([],400);
     }); 
 
-
 }); 
+
     
-Route::group(['middleware' => 'cors'], function(){
+Route::group(['middleware' => [\Barryvdh\Cors\HandleCors::class,'jwt.auth']], function(){
+
+    Route::post('/api/auth/profile', 'UserController@apiProfileUpdate');
+
 
 }); 
 /**

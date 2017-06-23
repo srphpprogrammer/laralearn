@@ -408,6 +408,42 @@ class UserController extends Controller
     }
 
 
+  /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function apiProfileUpdate(Request $request)
+    {
+
+
+
+                    $postdata = file_get_contents("php://input");
+        $request = json_decode($postdata);
+
+
+
+        $validator = Validator::make([
+            'brights' => "My rights",
+            'name' => $request->fname
+        ], [
+            'brights' => 'required',
+            'name' => 'required',
+        ]);
+
+
+        if ($validator->fails()) {
+           return response($validator->errors(),401);
+        }
+
+        User::where('id',Auth::id())->update([
+            'brights' => $request->input('brights'),
+            'name' =>  $request->input('name'),
+        ]);
+
+     
+
+    }
 
 
 
