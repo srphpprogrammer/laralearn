@@ -176,8 +176,12 @@ class AuthController extends Controller
   $user = JWTAuth::toUser($token);
 
 
+
         ///return response (compact('token'));
-        return ["user" => $user->email,"token"=>$token];
+        return [
+        'status'=>[
+            'bio_status' => 1
+        ],"user" => $user->email,"token"=>$token];
     }
 
   /**

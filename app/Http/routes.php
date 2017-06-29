@@ -66,6 +66,7 @@ Route::group(['middleware' => \Barryvdh\Cors\HandleCors::class], function(){
     Route::post('/api/auth/register', 'Auth\AuthController@jwtregister');
     Route::get('/api/auth/verify', 'Auth\AuthController@jwtverify');
     Route::post('/api/auth/login', 'Auth\AuthController@jwtprotected');
+    Route::get('/api/activity', 'WallController@getApiPosts');
 
 
     Route::post('/api/auth/xregister', function() {
@@ -88,10 +89,10 @@ Route::group(['middleware' => \Barryvdh\Cors\HandleCors::class], function(){
 Route::group(['middleware' => [\Barryvdh\Cors\HandleCors::class,'jwt.auth']], function(){
 
     Route::post('/api/auth/profile', 'UserController@apiProfileUpdate');
+    Route::get('/api/auth/mobprofile', 'UserController@apiGetProfile');
 
 
 }); 
-/**
 
 
 Route::get('/', 'HomeController@index');
@@ -168,6 +169,7 @@ Route::any('{path?}', function()
 
 
 
+/**
 
 
 

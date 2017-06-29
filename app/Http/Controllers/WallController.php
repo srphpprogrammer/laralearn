@@ -9,9 +9,28 @@ use App\Friend;
 use App\User;
 use App\Post;
 use Auth;
-
+use JWTAuth;
 class WallController extends Controller
 {
+
+
+        /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getApiPosts(Request $request)
+    {   
+        $friends    = Friend::getFriendsApi();
+        $friends[]  = 1;//JWTAuth::parseToken()->toUser()->id;
+        //dd($friends);
+        $limit      = 5;//$request->input('limit');
+        $offset     = 0;//$request->input('offset');
+        $posts      = Post::with('user')->whereIn('user_id',$friends)->limit(3)->offset($offset)->orderBy('id','desc')->get();
+        return $posts;
+    }
+
+
     /**
      * Display a listing of the resource.
      *

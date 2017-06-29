@@ -416,16 +416,12 @@ class UserController extends Controller
     public function apiProfileUpdate(Request $request)
     {
 
-
-
-                    $postdata = file_get_contents("php://input");
+        $postdata = file_get_contents("php://input");
         $request = json_decode($postdata);
 
-
-
         $validator = Validator::make([
-            'brights' => "My rights",
-            'name' => $request->fname
+            'brights' =>  $request->about,
+            'name' => $request->profname
         ], [
             'brights' => 'required',
             'name' => 'required',
@@ -436,14 +432,39 @@ class UserController extends Controller
            return response($validator->errors(),401);
         }
 
-        User::where('id',Auth::id())->update([
-            'brights' => $request->input('brights'),
-            'name' =>  $request->input('name'),
-        ]);
+        if(User::where('id',Auth::id())->update([
+            'brights' => $request->about,
+            'name' =>  $request->profname,
+        ])){
+
+            return "OK";
+        }
 
      
 
     }
+
+
+  /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function apiGetProfile()
+    {
+
+
+
+       $user    = User::findorFail(Auth::id());
+       $rights  = explode(',', $user->brights);
+
+       return $user;
+
+    }
+
+
+
 
 
 
